@@ -5,7 +5,7 @@ from pprint import pprint
 import json
 
 load_dotenv()
-VK_Token = os.getenv('VK_Token')
+VK_TOKEN = os.getenv('VK_TOKEN')
 
 class VK_Connect:
     
@@ -29,6 +29,7 @@ class VK_Connect:
             'extended': 1
         }
         response = requests.get(photo_url, params=params)
+        # pprint(response.json())
         photo_URLs = []
         data_list = []
         for item in response.json()['response']['items']:
@@ -45,8 +46,4 @@ class VK_Connect:
         
         with open('result.json', 'w') as fp:
             json.dump(data_list, fp, indent='')
-        return response.json()
-
-vk = VK_Connect(VK_Token)
-photos = vk.photos_get()
-pprint(photos) 
+        return photo_URLs
