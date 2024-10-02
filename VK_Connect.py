@@ -28,7 +28,7 @@ class VK_Connect:
             'extended': 1
         }
         response = requests.get(photo_url, params=params)
-        # pprint(response.json())
+        # print(response.json())
         photo_URLs = []
         data_list = []
         for item in response.json()['response']['items']:

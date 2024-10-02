@@ -37,15 +37,14 @@ class YA_Connect:
                 headers=self.headers, 
                 params={'path': f'{folder_name}'}
             )
-            print(f'Папка "{folder_name}" успешно создана')
+            print(f'Папка "{folder_name}" успешно создана\n\n')
             return folder_name
             
             
-    def save_photos(self, owner_id):
-        self.owner_id = owner_id
-        folder_name = self.create_folder()
+    def save_photos(self, owner_id, album_id='profile', count=5, folder='VK_Photos'):
+        folder_name = self.create_folder(folder)
         vk = VK_Connect(VK_TOKEN)
-        for photo in tqdm(vk.photos_get(owner_id), ncols=80, desc='Сохранение фото'):   
+        for photo in tqdm(vk.photos_get(owner_id, album_id, count), ncols=80, desc='Сохранение фото'):   
             sleep(.1)
             params_ya = {
                     'url': photo[0],
@@ -59,4 +58,3 @@ class YA_Connect:
     
 
 ya = YA_Connect(YA_TOKEN)
-photo = ya.save_photos()
