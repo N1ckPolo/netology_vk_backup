@@ -1,12 +1,14 @@
 import os
 from dotenv import load_dotenv
 from YA_Connect import YA_Connect
-
+from VK_Connect import VK_Connect
 
 load_dotenv()
 YA_TOKEN = os.getenv('YA_TOKEN')
+VK_TOKEN = os.getenv('VK_TOKEN')
 
 ya = YA_Connect(YA_TOKEN)
+vk = VK_Connect(VK_TOKEN)
 
 print('Зравствуйте, введите ID пользователя VK, фотографии которого нужно сохранить:')
 owner_id = input('VK ID: ')
@@ -22,12 +24,13 @@ folder = input('Введите имя папки создаваемой на Я�
 if not folder:
     folder = 'VK_Photos'  
 
-photo = ya.save_photos(owner_id, album_id, count, folder)
+get_photo = vk.photos_get(owner_id, album_id, count)
+save_photo = ya.save_photos(get_photo, folder)
+
 print("\nГотово! Подробности сохранены в result.json, в корневой директоии проекта")
+
 
 # Добавить в будущем:
 #     Обработку варианта с пустыми строками поместить в определение самих функций
 #     Обработку вариантов без ввода VK ID, символы в count итд
 #     Сохранение фото на GoogleDrive
-    
-    

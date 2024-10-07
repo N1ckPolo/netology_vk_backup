@@ -2,7 +2,6 @@ import requests
 import os
 from dotenv import load_dotenv
 from datetime import datetime
-from VK_Connect import VK_Connect
 from tqdm import tqdm
 from time import sleep
 
@@ -40,21 +39,17 @@ class YA_Connect:
             print(f'Папка "{folder_name}" успешно создана\n\n')
             return folder_name
             
-            
-    def save_photos(self, owner_id, album_id='profile', count=5, folder='VK_Photos'):
-        folder_name = self.create_folder(folder)
-        vk = VK_Connect(VK_TOKEN)
-        for photo in tqdm(vk.photos_get(owner_id, album_id, count), ncols=80, desc='Сохранение фото'):   
-            sleep(.1)
-            params_ya = {
-                    'url': photo[0],
-                    'path': f'disk:/{folder_name}/{photo[1]}'
-                }
-            save_photos = requests.post(
-                f'{self.base_url}/upload', 
-                params=params_ya, 
-                headers=self.headers
-            )
     
-
-ya = YA_Connect(YA_TOKEN)
+    def save_photos(self, photos_get_func, folder='VK_Photos'):
+            folder_name = self.create_folder(folder)
+            for photo in tqdm(photos_get_func, ncols=80, desc='Сохранение фото'):   
+                sleep(.1)
+                params_ya = {
+                        'url': photo[0],
+                        'path': f'disk:/{folder_name}/{photo[1]}'
+                    }
+                save_photos = requests.post(
+                    f'{self.base_url}/upload', 
+                    params=params_ya, 
+                    headers=self.headers
+            )

@@ -3,6 +3,7 @@ import os
 from dotenv import load_dotenv
 import json
 
+
 load_dotenv()
 VK_TOKEN = os.getenv('VK_TOKEN')
 
@@ -28,7 +29,7 @@ class VK_Connect:
             'extended': 1
         }
         response = requests.get(photo_url, params=params)
-        # print(response.json())
+        # pprint(response.json())
         photo_URLs = []
         data_list = []
         for item in response.json()['response']['items']:
@@ -36,12 +37,25 @@ class VK_Connect:
             file_name = f"{item['likes']['count']}"
             if file_name in map(lambda x: x[1], photo_URLs):
                 file_name = f"{item['likes']['count']}_{date}" 
-            photo_URLs.append((item['orig_photo']['url'], file_name))
-            data = {
-                'file_name': f'{file_name}.jpg', 
-                'size': f"{item['orig_photo']['height']}*{item['orig_photo']['width']}"
-            }
-            data_list.append(data)
+            
+            if 'orig_photo' in item:
+                photo_URL = item['orig_photo']['url']
+                data = {
+                    'file_name': f'{file_name}.jpg', 
+                    'size': f"{item['orig_photo']['height']}*{item['orig_photo']['width']}"
+                }
+                data_list.append(data)
+            
+            else:
+                photo_URL = item['sizes'][-1]['url']
+                data = {
+                    'file_name': f'{file_name}.jpg', 
+                    'size': f"{item['sizes'][-1]['height']}*{item['sizes'][-1]['width']}"
+                }
+                data_list.append(data)
+            
+            
+            photo_URLs.append((photo_URL, file_name))
         
         with open('result.json', 'w') as fp:
             json.dump(data_list, fp, indent='')
